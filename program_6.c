@@ -83,9 +83,9 @@ int main() {
         switch(choice) {
             case 1:
                 printf("Enter employee name: ");
-                scanf(" %s", name);
+                scanf(" %[^\n]", name);
                 printf("Enter employee salary: ");
-                scanf("%d", &salary);
+                scanf(" %d", &salary);
                 root = insert(root, name, salary);
                 printf("Employee added successfully.\n");
                 break;
