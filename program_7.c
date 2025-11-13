@@ -3,7 +3,6 @@
 #include <string.h>
 #include <ctype.h>
 #define ALPHABET 26
-
 struct Trie {
     struct Trie *child[ALPHABET];
     int isEnd;
@@ -19,7 +18,7 @@ void insert(struct Trie *root, char *word) {
     struct Trie *temp = root;
     for (int i = 0; word[i]; i++) {
         int index = tolower(word[i]) - 'a';
-        if (index < 0 || index >= ALPHABET) continue;
+        if (index < 0 || index >= ALPHABET) continue; 
         if (temp->child[index] == NULL)
             temp->child[index] = newNode();
         temp = temp->child[index];
@@ -46,55 +45,68 @@ int main() {
                     "internet","interview","joy","job",
                     "king","lion","man","mango","manage"};
     int n = sizeof(keys)/sizeof(keys[0]);
-    printf("1. Read keys from file and search\n");
-    printf("2. Read keys from array and search\n");
-    printf("3. Build from array and search words in file\n");
-    printf("Enter choice: ");
-    scanf("%d", &choice);
+    do {
+        printf("\n========== TRIE MENU ==========\n");
+        printf("1. Read keys from file and search\n");
+        printf("2. Read keys from array and search\n");
+        printf("3. Build from array and search words in file\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                fp = fopen("keys.txt", "r");
+                if (!fp) {
+                    printf("File not found!\n");
+                    break;
+                }
+                while (fscanf(fp, "%s", word) != EOF)
+                    insert(root, word);
+                fclose(fp);
 
-    if (choice == 1) {
-        fp = fopen("keys.txt", "r");
-        if (!fp) { printf("File not found!\n"); return 0; }
-        while (fscanf(fp, "%s", word) != EOF)
-            insert(root, word);
-        fclose(fp);
+                printf("Enter word to search: ");
+                scanf("%s", word);
+                if (search(root, word))
+                    printf("'%s' FOUND (from file)\n", word);
+                else
+                    printf("'%s' NOT found\n", word);
+                break;
+            case 2:
+                for (int i = 0; i < n; i++)
+                    insert(root, keys[i]);
 
-        printf("Enter word to search: ");
-        scanf("%s", word);
-        if (search(root, word))
-            printf("'%s' FOUND (from file)\n", word);
-        else
-            printf("'%s' NOT found\n", word);
-    }
-    else if (choice == 2) {
-        for (int i = 0; i < n; i++)
-            insert(root, keys[i]);
-        printf("Enter word to search: ");
-        scanf("%s", word);
-        if (search(root, word))
-            printf("'%s' FOUND (from array)\n", word);
-        else
-            printf("'%s' NOT found\n", word);
-    }
+                printf("Enter word to search: ");
+                scanf("%s", word);
+                if (search(root, word))
+                    printf("'%s' FOUND (from array)\n", word);
+                else
+                    printf("'%s' NOT found\n", word);
+                break;
+            case 3:
+                for (int i = 0; i < n; i++)
+                    insert(root, keys[i]);
 
-    else if (choice == 3) {
-        for (int i = 0; i < n; i++)
-            insert(root, keys[i]);
-
-        fp = fopen("keys.txt", "r");
-        if (!fp) { printf("File not found!\n"); return 0; }
-
-        printf("\nChecking words from file...\n");
-        while (fscanf(fp, "%s", word) != EOF) {
-            if (search(root, word))
-                printf("%s → FOUND\n", word);
-            else
-                printf("%s → NOT found\n", word);
+                fp = fopen("keys.txt", "r");
+                if (!fp) {
+                    printf("File not found!\n");
+                    break;
+                }
+                printf("\nChecking words from file...\n");
+                while (fscanf(fp, "%s", word) != EOF) {
+                    if (search(root, word))
+                        printf("%s FOUND\n", word);
+                    else
+                        printf("%s NOT found\n", word);
+                }
+                fclose(fp);
+                break;
+            case 4:
+                printf("Exiting program... Goodbye!\n");
+                break;
+            default:
+                printf("Invalid choice! Please try again.\n");
+                break;
         }
-        fclose(fp);
-    }
-    else {
-        printf("Invalid choice!\n");
-    }
+    } while (choice != 4);
     return 0;
 }
