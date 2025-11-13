@@ -7,8 +7,6 @@ typedef struct Employee {
     struct Employee* left;
     struct Employee* right;
 } Employee;
-
-// Function to create a new employee node
 Employee* createEmployee(char* name, int salary) {
     Employee* newEmp = (Employee*)malloc(sizeof(Employee));
     strcpy(newEmp->name, name);
@@ -16,8 +14,6 @@ Employee* createEmployee(char* name, int salary) {
     newEmp->left = newEmp->right = NULL;
     return newEmp;
 }
-
-// Insert employee into BST based on salary
 Employee* insert(Employee* root, char* name, int salary) {
     if (root == NULL) {
         return createEmployee(name, salary);
@@ -29,8 +25,6 @@ Employee* insert(Employee* root, char* name, int salary) {
     }
     return root;
 }
-
-// Inorder traversal to display employees sorted by salary
 void inorder(Employee* root) {
     if (root != NULL) {
         inorder(root->left);
@@ -38,8 +32,6 @@ void inorder(Employee* root) {
         inorder(root->right);
     }
 }
-
-// Find employee with minimum salary (leftmost node)
 Employee* findMin(Employee* root) {
     Employee* current = root;
     while (current && current->left != NULL) {
@@ -47,8 +39,6 @@ Employee* findMin(Employee* root) {
     }
     return current;
 }
-
-// Find employee with maximum salary (rightmost node)
 Employee* findMax(Employee* root) {
     Employee* current = root;
     while (current && current->right != NULL) {
@@ -56,8 +46,6 @@ Employee* findMax(Employee* root) {
     }
     return current;
 }
-
-// Calculate total monthly expenses by summing all salaries in BST
 int totalSalary(Employee* root) {
     if (root == NULL) return 0;
     return root->salary + totalSalary(root->left) + totalSalary(root->right);
